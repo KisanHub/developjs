@@ -7,3 +7,6 @@
 [submodule "lib/shellfire/jsonreader"]
 	path = lib/shellfire/jsonreader
 	url = https://github.com/shellfire-dev/jsonreader
+[submodule "lib/shellfire/unicode"]
+	path = lib/shellfire/unicode
+	url = https://github.com/shellfire-dev/unicode

@@ -1,10 +1,17 @@
 #!/usr/bin/env sh
+# This file is part of developjs. It is subject to the licence terms in the COPYRIGHT file found in the top-level directory of this distribution and at https://raw.githubusercontent.com/KisanHub/developjs/master/COPYRIGHT. No part of developjs, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYRIGHT file.
+# Copyright © 2015 The developers of developjs. See the COPYRIGHT file in the top-level directory of this distribution and at https://raw.githubusercontent.com/KisanHub/developjs/master/COPYRIGHT.
+
 
 _program()
-{   
+{
+	core_usesIn developjs
+	
     developjs()
     {
-        echo "Hello World"
+		developjs_populateAllModulesIfNoneSupplied
+		developjs_createOutputPath
+		developjs_processModules
     }
 }
 
@@ -16,6 +23,94 @@ _program_libPath="${_program_path}/lib"
 _program_etcPath="${_program_path}/etc"
 _program_varPath="${_program_path}/var"
 _program_entrypoint='developjs'
+
+
+_program_commandLine_parseInitialise()
+{
+	developjs_modulePath_default="$(pwd)"
+	developjs_outputPath_default="$_program_varPath"/tmp/"$_program_name"
+}
+
+_program_commandLine_helpMessage()
+{
+	_program_commandLine_helpMessage_usage="[OPTION]... -- [MODULES]..."
+	_program_commandLine_helpMessage_description="Parses MODULE.json files to create concatenated JavaScript"
+	_program_commandLine_helpMessage_options="
+  -m, --module-path PATH    PATH to folder of modules.
+                            Defaults to '$developjs_modulePath_default'.
+  -o, --output-path PATH    PATH to folder of concatenated JavaScript.
+                            Defaults to '$developjs_outputPath_default'."
+    _program_commandLine_helpMessage_optionsSpacing='   '
+	_program_commandLine_helpMessage_configurationKeys="
+  developjs_modulePath      Equivalent to --module-path
+  developjs_outputPath      Equivalent to --output-path
+"
+	_program_commandLine_helpMessage_examples="
+  ${_program_name} -- classjs.module.json
+"
+}
+
+_program_commandLine_optionExists()
+{
+	case "$optionName" in
+		
+		m|module-path)
+			echo 'yes-argumented'
+		;;
+		
+		o|output-path)
+			echo 'yes-argumented'
+		;;
+		
+		*)
+			echo 'no'
+		;;
+		
+	esac
+}
+
+_program_commandLine_processOptionWithoutArgument()
+{
+	:
+}
+
+_program_commandLine_processOptionWithArgument()
+{
+	case "$optionName" in
+		
+		m|module-path)
+			core_validate_folderPathReadableAndSearchableAndWritable $core_commandLine_exitCode_USAGE 'option' "$optionNameIncludingHyphens" "$optionValue"
+			developjs_modulePath="$optionValue"
+		;;
+		
+		o|output-path)
+			core_validate_folderPathIsReadableAndSearchableAndWritableOrCanBeCreated $core_commandLine_exitCode_USAGE 'option' "$optionNameIncludingHyphens" "$optionValue"
+			developjs_outputPath="$optionValue"
+		;;
+		
+	esac
+}
+
+_program_commandLine_handleNonOptions()
+{
+	core_variable_array_initialise developjs_modules
+	core_variable_array_append developjs_modules "$@"
+}
+
+_program_commandLine_validate()
+{
+	if core_variable_isUnset developjs_modulePath; then
+		developjs_modulePath="$developjs_modulePath_default"
+	else
+		core_validate_folderPathIsReadableAndSearchableAndWritableOrCanBeCreated $core_commandLine_exitCode_CONFIG 'configuration setting' 'developjs_modulePath' "$developjs_modulePath"
+	fi
+
+	if core_variable_isUnset developjs_outputPath; then
+		developjs_outputPath="$developjs_outputPath_default"
+	else
+		core_validate_folderPathReadableAndSearchableAndWritable $core_commandLine_exitCode_CONFIG 'configuration setting' 'developjs_outputPath' "$developjs_outputPath"
+	fi
+}
 
 
 # Assumes pwd, and so requires this code to be running from this folder
