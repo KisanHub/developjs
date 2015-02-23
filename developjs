@@ -27,8 +27,8 @@ _program_entrypoint='developjs'
 
 _program_commandLine_parseInitialise()
 {
-	developjs_modulePath_default="$(pwd)"
-	developjs_outputPath_default="$_program_varPath"/tmp/"$_program_name"
+	developjs_modulePath_default="$(pwd)"/source
+	developjs_outputPath_default="$(pwd)"/output
 }
 
 _program_commandLine_helpMessage()
