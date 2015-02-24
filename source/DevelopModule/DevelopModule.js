@@ -63,7 +63,10 @@ var DevelopModule = (function(module){
 	{
 		if (alreadyLoadedModule.hasOwnProperty(moduleName))
 		{
-			callbackOnAllScriptsLoaded()
+			if (callbackOnAllScriptsLoaded instanceof Function)
+			{
+				callbackOnAllScriptsLoaded()
+			}
 			return false
 		}
 		alreadyLoadedModule[moduleName] = true
@@ -181,7 +184,11 @@ var DevelopModule = (function(module){
 					headNode.appendChild(orderedScriptNode)
 					delete this[index]
 				})
-				this.callbackOnAllScriptsLoaded()
+
+				if (this.callbackOnAllScriptsLoaded instanceof Function)
+				{
+					this.callbackOnAllScriptsLoaded()
+				}
 			}
 		}
 		
