@@ -16,7 +16,7 @@ var DevelopModule = (function(module){
 			{
 				callbackOnPackageLoaded()
 			}
-			return false
+			return
 		}
 		alreadyLoadedPackage[packageName] = true
 		
@@ -50,7 +50,10 @@ var DevelopModule = (function(module){
 					outstanding -= 1
 					if (outstanding == 0)
 					{
-						callbackOnPackageLoaded()
+						if (callbackOnPackageLoaded instanceof Function)
+						{
+							callbackOnPackageLoaded()
+						}
 					}
 				})
 			})
@@ -70,7 +73,7 @@ var DevelopModule = (function(module){
 			{
 				callbackOnAllScriptsLoaded()
 			}
-			return false
+			return
 		}
 		alreadyLoadedModule[moduleName] = true
 		
