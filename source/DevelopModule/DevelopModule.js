@@ -144,18 +144,18 @@ var DevelopModule = (function(module){
 			
 			scriptNode.wrapScriptInModule = function wrapScriptInModule(ourNamespace, originalScript)
 			{
-				// eg MongoDbModule.V2ProtocolHandlerModule
+				// eg MongoModule.Credentials
 				var globalObject = ourNamespace.join('.')
 				
 				var descendentNamespace = ourNamespace[ourNamespace.length - 1]
 
 				/*		
-					MongoDbModule.V2ProtocolHandlerModule = (function(module){
+					MongoModule.Credentials = (function(module){
 						<originalScript>
 						return module
-					}(MongoDbModule.V2ProtocolHandlerModule || {}));
+					}(MongoModule.Credentials || {}));
 		
-					where globalObject == MongoDbModule.V2ProtocolHandlerModule, say
+					where globalObject == MongoModule.Credentials, say
 				*/
 		
 				var script = ''
@@ -223,18 +223,18 @@ var DevelopModule = (function(module){
 					/*
 						For index 0, equivalent of:-
 				
-						var MongoDbModule = (function(module)
+						var MongoModule = (function(module)
 						{
 							return module
-						})(MongoDbModule || {}));
+						})(MongoModule || {}));
 					*/
 					/*
 						For other indices, equivalent of:-
 				
-						MongoDbModule.V2ProtocolHandlerModule = (function(module)
+						MongoModule.Credentials = (function(module)
 						{
 							return module
-						})(MongoDbModule.V2ProtocolHandlerModule || {});
+						})(MongoModule.Credentials || {});
 					*/
 					if (parentModule[childModuleName])
 					{
