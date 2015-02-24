@@ -36,14 +36,18 @@ _program_commandLine_helpMessage()
 	_program_commandLine_helpMessage_usage="[OPTION]... -- [MODULES]..."
 	_program_commandLine_helpMessage_description="Parses MODULE.json files to create concatenated JavaScript"
 	_program_commandLine_helpMessage_options="
-  -m, --module-path PATH    PATH to folder of modules.
-                            Defaults to '$developjs_modulePath_default'.
-  -o, --output-path PATH    PATH to folder of concatenated JavaScript.
-                            Defaults to '$developjs_outputPath_default'."
+  -m, --module-path PATH     PATH to folder of modules.
+                             Defaults to '$developjs_modulePath_default'.
+  -o, --output-path PATH     PATH to folder of concatenated JavaScript.
+                             Defaults to '$developjs_outputPath_default'.
+  -l, --copyright-file PATH  PATH to copyright file.
+                             Defaults to '--module-path ../COPYRIGHT', currently:-
+                             '$developjs_modulePath_default/../COPYRIGHT'."
     _program_commandLine_helpMessage_optionsSpacing='   '
 	_program_commandLine_helpMessage_configurationKeys="
   developjs_modulePath      Equivalent to --module-path
   developjs_outputPath      Equivalent to --output-path
+  developjs_copyrightFile   Equivalent to --copyright-file
 "
 	_program_commandLine_helpMessage_examples="
   ${_program_name} -- classjs.module.json
@@ -59,6 +63,10 @@ _program_commandLine_optionExists()
 		;;
 		
 		o|output-path)
+			echo 'yes-argumented'
+		;;
+		
+		l|copyright-file)
 			echo 'yes-argumented'
 		;;
 		
@@ -88,6 +96,11 @@ _program_commandLine_processOptionWithArgument()
 			developjs_outputPath="$optionValue"
 		;;
 		
+		l|copyright-file)
+			core_validate_filePathReadable $core_commandLine_exitCode_USAGE 'option' "$optionNameIncludingHyphens" "$optionValue"
+			developjs_copyrightFile="$optionValue"
+		;;
+		
 	esac
 }
 
@@ -109,6 +122,13 @@ _program_commandLine_validate()
 		developjs_outputPath="$developjs_outputPath_default"
 	else
 		core_validate_folderPathReadableAndSearchableAndWritable $core_commandLine_exitCode_CONFIG 'configuration setting' 'developjs_outputPath' "$developjs_outputPath"
+	fi
+
+	if core_variable_isUnset developjs_copyrightFile; then
+		developjs_copyrightFile="$developjs_modulePath"/../COPYRIGHT
+		core_validate_filePathReadable $core_commandLine_exitCode_CONFIG 'default' '--copyright-file' "$developjs_copyrightFile"
+	else
+		core_validate_filePathReadable $core_commandLine_exitCode_CONFIG 'configuration setting' 'developjs_outputPath' "$developjs_outputPath"
 	fi
 }
 

@@ -12,12 +12,22 @@ developjs_module_setVariables()
 developjs_module_validate()
 {
 	core_validate_filePathReadable "$core_commandLine_exitCode_USAGE" "non-option" "modules" "$developjs_moduleFilePath"
-}	
+}
 
+core_dependency_requires '*' cat
 core_usesIn jsonreader
 developjs_module_createOutputFilePath()
 {
-	jsonreader_parse "$developjs_moduleFilePath" developjs_module_parseJson_callback >"$developjs_outputFilePath"
+	{
+		printf '/*\n'
+		
+		cat "$developjs_copyrightFile"
+		printf '\n'
+		
+		printf '*/\n\n\n'
+	
+		jsonreader_parse "$developjs_moduleFilePath" developjs_module_parseJson_callback
+	} >>"$developjs_outputFilePath"
 }
 
 core_dependency_requires '*' sed

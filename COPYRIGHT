@@ -1,5 +1,5 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Comment: Distribution Compilation Copyright and License
+Comment: Distribution Compilation Copyright and License for developjs
 Copyright: Copyright © 2015, KisanHub <sachin@kisanhub.com>
            Copyright © 2015, Raphael Cohn <raphael.cohn@stormmq.com>
 License: MIT
