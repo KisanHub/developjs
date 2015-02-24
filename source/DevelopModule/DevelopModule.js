@@ -8,7 +8,7 @@ var DevelopModule = (function(module){
 	
 	var alreadyLoadedPackage = {}
 	
-	module.loadPackage = function(path, packageName, callbackOnPackageLoaded)
+	module.loadPackage = function loadDevelopmentPackage(path, packageName, callbackOnPackageLoaded)
 	{
 		if (alreadyLoadedPackage.hasOwnProperty(packageName))
 		{
@@ -16,14 +16,13 @@ var DevelopModule = (function(module){
 			return false
 		}
 		alreadyLoadedPackage[packageName] = true
-			
+		
 		var ajax = new XMLHttpRequest()
 		ajax.onload = function(event)
 		{
 			if (ajax.status != 200)
 			{
-				throw "Could not load package " + packageName
-				return false
+				throw "Could not load package '" + packageName + "'"
 			}
 			
 			var topLevelModules
@@ -56,13 +55,11 @@ var DevelopModule = (function(module){
 		
 		ajax.open('GET', path + packageName + '.package.json', true)
 		ajax.send()
-		
-		return true
 	}
 	
 	var alreadyLoadedModule = {}
 	
-	module.loadModule = function(path, moduleName, callbackOnAllScriptsLoaded)
+	module.loadModule = function loadModule(path, moduleName, callbackOnAllScriptsLoaded)
 	{
 		if (alreadyLoadedModule.hasOwnProperty(moduleName))
 		{
@@ -70,14 +67,13 @@ var DevelopModule = (function(module){
 			return false
 		}
 		alreadyLoadedModule[moduleName] = true
-			
+		
 		var ajax = new XMLHttpRequest()
 		ajax.onload = function(event)
 		{
 			if (ajax.status != 200)
 			{
-				throw "Could not load module " + moduleName
-				return false
+				throw "Could not load module '" + moduleName + "'"
 			}
 			
 			var modules
@@ -98,8 +94,6 @@ var DevelopModule = (function(module){
 		
 		ajax.open('GET', path + moduleName + '/module.json', true)
 		ajax.send()
-		
-		return true
 	}
 	
 	function loadModulesFromRoot(path, modules, callbackOnAllScriptsLoaded)
@@ -115,12 +109,8 @@ var DevelopModule = (function(module){
 		scriptNodes.loadScript = function loadScript(ourNamespace, fileName)
 		{
 			var scriptUrl = scriptNodes.path + ourNamespace.join('/') + '/' + fileName + '.js'
-		
-			var scriptNode = document.createElement('script')
-			scriptNode.type = 'text/javascript'
-			scriptNode.async = false
-			scriptNode.title = scriptUrl
-			//scriptNode.src = scriptUrl
+			
+			var scriptNode = newScriptNode(scriptUrl)
 		
 			var ajax = new XMLHttpRequest()
 			scriptNode.ajax = ajax
@@ -184,7 +174,7 @@ var DevelopModule = (function(module){
 
 			if (this.remainingToDownload == 0)
 			{
-				var headNode = document.getElementsByTagName('head')[0]
+				var headNode = getHeadNode()
 			
 				this.forEach(function(orderedScriptNode, index)
 				{
@@ -269,9 +259,21 @@ var DevelopModule = (function(module){
 		
 		scriptNodes.download()
 	}
-
 	
+	function newScriptNode(scriptUrl)
+	{
+		var scriptNode = document.createElement('script')
+		scriptNode.type = 'text/javascript'
+		scriptNode.async = false
+		scriptNode.title = scriptUrl
+		//scriptNode.src = scriptUrl
+		return scriptNode
+	}
 	
+	function getHeadNode()
+	{
+		return document.getElementsByTagName('head')[0]
+	}
 	
 	return module
 	

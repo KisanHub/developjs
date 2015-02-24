@@ -40,6 +40,7 @@ developjs_processModules()
 		developjs_module_validate
 		developjs_module_checkIfCanOverwrite
 		developjs_module_createOutputFilePath
+		developjs_module_minimiseWithClosure
 	}	
 	
 	core_variable_array_iterate developjs_modules _developjs_processModules_callback

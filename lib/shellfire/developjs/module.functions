@@ -6,7 +6,8 @@ developjs_module_setVariables()
 {
 	developjs_moduleName="$core_variable_array_element"
 	developjs_moduleFilePath="$developjs_modulePath"/"$developjs_moduleName"/module.json
-	developjs_outputFilePath="$developjs_outputPath"/"$developjs_moduleName".js
+	developjs_outputFileBaseNamePath="$developjs_outputPath"/"$developjs_moduleName"
+	developjs_outputFilePath="$developjs_outputFileBaseNamePath".js
 }
 
 developjs_module_validate()
@@ -33,6 +34,7 @@ developjs_module_createOutputFilePath()
 	{
 		printf '/*\n'
 		
+		printf '%s' '@license '
 		cat "$developjs_copyrightFile"
 		printf '\n'
 		
@@ -40,6 +42,31 @@ developjs_module_createOutputFilePath()
 	
 		jsonreader_parse "$developjs_moduleFilePath" developjs_module_parseJson_callback
 	} >>"$developjs_outputFilePath"
+}
+
+# https://developers.google.com/closure/compiler/docs/api-ref
+core_usesIn curl
+developjs_module_minimiseWithClosure()
+{
+	local curl_uploadFile
+	
+	local TMP_FILE
+	core_temporaryFiles_newFileToRemoveOnExit
+	local curl_uploadFile="$TMP_FILE"
+
+	local curl_httpStatusCode
+	urlencode_xWwwFormUrlEncoded \
+		'js_code' "$(<"$developjs_outputFilePath")" \
+		'compilation_level' 'SIMPLE_OPTIMIZATIONS' \
+		'output_format' 'text' \
+		'output_info' 'compiled_code' \
+		'language' 'ECMASCRIPT5_STRICT' \
+		>"$curl_uploadFile"
+	
+	curl_http none '' POST 'http://closure-compiler.appspot.com/compile' "$developjs_outputFileBaseNamePath".min.js
+	if [ $curl_httpStatusCode -ne 200 ]; then
+		core_exitError $core_commandLine_exitCode_PROTOCOL "Did not minimise javascript using Closure"
+	fi
 }
 
 core_dependency_requires '*' sed
@@ -113,15 +140,17 @@ developjs_module_createModule()
 		cat <<-EOF
 			var ${submoduleName} = (function(module)
 			{
-				return module
-			})(${submoduleName} || {}));
+				return module;
+			}(${submoduleName} || {}));
+			
 		EOF
 	else
 		cat <<-EOF
 			${submoduleName} = (function(module)
 			{
-				return module
-			})(${submoduleName} || {}));
+				return module;
+			}(${submoduleName} || {}));
+			
 		EOF
 	fi
 }
@@ -140,8 +169,7 @@ developjs_module_appendJavaScriptFile()
 	printf '%s = (function(module){\n' "$globalObject"
 	
 	cat "$javaScriptFilePath"
-	printf '\n'
 	
-	printf 'return module\n'
+	printf '\nreturn module;\n'
 	printf '}(%s || {}));\n' "$globalObject"
 }
