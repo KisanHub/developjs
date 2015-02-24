@@ -16,7 +16,7 @@ developjs_populateAllModulesIfNoneSupplied()
 		do
 			set -f
 			if [ -d "$module" ]; then
-				if [ ! -s "$module"/module.json ]; then
+				if [ -s "$module"/module.json ]; then
 					core_variable_array_append developjs_modules "$module"
 				fi
 			fi
