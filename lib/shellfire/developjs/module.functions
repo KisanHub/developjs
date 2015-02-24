@@ -18,7 +18,7 @@ core_dependency_requires '*' rm
 developjs_module_checkIfCanOverwrite()
 {
 	if [ -e "$developjs_moduleFilePath" ]; then
-		if [ core_variable_isTrue "$developjs_force" ]; then
+		if core_variable_isTrue "$developjs_force"; then
 			rm -rf "$developjs_moduleFilePath"
 		else
 			core_exitError $core_commandLine_exitCode_CANTCREAT "Can not overwrite existing file '$developjs_moduleFilePath'; please specify --force to do so"
