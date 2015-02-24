@@ -4,7 +4,7 @@ Copyright © 2015 The developers of developjs. See the COPYRIGHT file in the top
 */
 
 
-var PackageLoaderModule = (function(module){
+var DevelopModule = (function(module){
 	
 	var alreadyLoadedPackage = {}
 	
@@ -275,4 +275,4 @@ var PackageLoaderModule = (function(module){
 	
 	return module
 	
-}(PackageLoaderModule || {}));
+}(DevelopModule || {}));
