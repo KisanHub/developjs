@@ -42,7 +42,8 @@ _program_commandLine_helpMessage()
                              Defaults to '$developjs_outputPath_default'.
   -l, --copyright-file PATH  PATH to copyright file.
                              Defaults to '--module-path ../COPYRIGHT', currently:-
-                             '$developjs_modulePath_default/../COPYRIGHT'."
+                             '$developjs_modulePath_default/../COPYRIGHT'.
+  -f, --force                Force overwriting of existing modules."
     _program_commandLine_helpMessage_optionsSpacing='   '
 	_program_commandLine_helpMessage_configurationKeys="
   developjs_modulePath      Equivalent to --module-path
@@ -70,6 +71,10 @@ _program_commandLine_optionExists()
 			echo 'yes-argumented'
 		;;
 		
+        f|force)
+            echo 'yes-argumentless'
+        ;;
+		
 		*)
 			echo 'no'
 		;;
@@ -79,7 +84,13 @@ _program_commandLine_optionExists()
 
 _program_commandLine_processOptionWithoutArgument()
 {
-	:
+	case "$optionName" in
+		
+		f|force)
+			developjs_force='yes'
+		;;
+		
+	esac
 }
 
 _program_commandLine_processOptionWithArgument()
@@ -130,6 +141,12 @@ _program_commandLine_validate()
 	else
 		core_validate_filePathReadable $core_commandLine_exitCode_CONFIG 'configuration setting' 'developjs_outputPath' "$developjs_outputPath"
 	fi
+
+    if core_variable_isSet developjs_force; then
+        core_validate_isBoolean $core_commandLine_exitCode_CONFIG 'configuration setting' 'developjs_force' "$developjs_force"
+    else
+        developjs_force='no'
+    fi
 }
 
 

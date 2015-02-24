@@ -38,6 +38,7 @@ developjs_processModules()
 	{
 		developjs_module_setVariables
 		developjs_module_validate
+		developjs_module_checkIfCanOverwrite
 		developjs_module_createOutputFilePath
 	}	
 	
