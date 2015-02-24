@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+rm -rf ./output/*.js
+tools/developjs/developjs
