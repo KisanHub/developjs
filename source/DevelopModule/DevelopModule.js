@@ -8,11 +8,14 @@ var DevelopModule = (function(module){
 	
 	var alreadyLoadedPackage = {}
 	
-	module.loadPackage = function loadDevelopmentPackage(path, packageName, callbackOnPackageLoaded)
+	module.loadPackage = function loadPackage(path, packageName, callbackOnPackageLoaded)
 	{
 		if (alreadyLoadedPackage.hasOwnProperty(packageName))
 		{
-			callbackOnPackageLoaded()
+			if (callbackOnPackageLoaded instanceof Function)
+			{
+				callbackOnPackageLoaded()
+			}
 			return false
 		}
 		alreadyLoadedPackage[packageName] = true
