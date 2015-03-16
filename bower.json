@@ -29,6 +29,7 @@
 	],
 	"main":
 	[
+		"source/DevelopModule/DevelopModule.js"
 	],
 	"ignore":
 	[
