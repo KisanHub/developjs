@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
 rm -rf ./output/*.js
-tools/developjs/developjs
+tools/developjs/developjs --output-path release

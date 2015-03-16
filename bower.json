@@ -33,6 +33,7 @@
 	],
 	"ignore":
 	[
+		"bower.json"
 	],
 	"dependencies":
 	{
