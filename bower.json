@@ -1,0 +1,42 @@
+{
+	"name": "developjs",
+	"description": "A development productivity framework for JavaScript",
+	"license":
+	[
+		"MIT"
+	],
+	"homepage": "https://github.com/KisanHub/developjs",
+	"repository":
+	{
+		"type": "git",
+		"url": "git://github.com/KisanHub/developjs.git"
+	},
+	"keywords":
+	[
+		"development",
+		"productivity"
+	],
+	"authors":
+	[
+		{
+			"name": "KisanHub",
+			"email": "sachin@kisanhub.com"
+		},
+		{
+			"name": "Raphael Cohn",
+			"email": "raphael.cohn@stormmq.com"
+		}
+	],
+	"main":
+	[
+	],
+	"ignore":
+	[
+	],
+	"dependencies":
+	{
+	},
+	"devDependencies":
+	{
+	}
+}
