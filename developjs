@@ -126,13 +126,13 @@ _program_commandLine_validate()
 	if core_variable_isUnset developjs_modulePath; then
 		developjs_modulePath="$developjs_modulePath_default"
 	else
-		core_validate_folderPathIsReadableAndSearchableAndWritableOrCanBeCreated $core_commandLine_exitCode_CONFIG 'configuration setting' 'developjs_modulePath' "$developjs_modulePath"
+		core_validate_folderPathReadableAndSearchableAndWritable $core_commandLine_exitCode_CONFIG 'configuration setting' 'developjs_modulePath' "$developjs_modulePath"
 	fi
 
 	if core_variable_isUnset developjs_outputPath; then
 		developjs_outputPath="$developjs_outputPath_default"
 	else
-		core_validate_folderPathReadableAndSearchableAndWritable $core_commandLine_exitCode_CONFIG 'configuration setting' 'developjs_outputPath' "$developjs_outputPath"
+		core_validate_folderPathIsReadableAndSearchableAndWritableOrCanBeCreated $core_commandLine_exitCode_CONFIG 'configuration setting' 'developjs_outputPath' "$developjs_outputPath"
 	fi
 
 	if core_variable_isUnset developjs_copyrightFile; then
