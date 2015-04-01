@@ -157,7 +157,7 @@ module.loadModule = function loadModule(path, moduleName, callbackOnAllScriptsLo
 	
 	var scriptUrl = path + moduleName + '.js'
 	var ajax = new XMLHttpRequest()
-	extantModuleAjax.onload = function(event)
+	ajax.onload = function(event)
 	{
 		if (ajax.status != 200)
 		{
