@@ -161,14 +161,11 @@ module.loadModule = function loadModule(path, moduleName, callbackOnAllScriptsLo
 	{
 		if (ajax.status != 200)
 		{
+			loadModuleUsingJsonListOfModuleFiles(path, moduleName, callbackOnAllScriptsLoaded)
 			return
 		}
 		
 		var scriptNode = newScriptNode(scriptUrl)
-		scriptNode.onerror = function onerror(event)
-		{
-			loadModuleUsingJsonListOfModuleFiles(path, moduleName, callbackOnAllScriptsLoaded)
-		}
 		scriptNode.textContent = ajax.responseText
 		
 		var headNode = getHeadNode()
