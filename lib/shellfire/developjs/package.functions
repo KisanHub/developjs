@@ -93,7 +93,7 @@ developjs_package_minimiseWithClosure()
 	fi
 }
 
-core_usesIn compress gzio
+core_usesIn compress gzip
 developjs_package_compressMinified()
 {
 	compress_gzip "$developjs_package_outputMinFilePath"
