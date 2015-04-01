@@ -31,14 +31,6 @@ developjs_createOutputPath()
 
 core_usesIn developjs package
 developjs_processPackages()
-{
-	_developjs_processPackages_callback()
-	{
-		developjs_package_setVariables
-		developjs_package_validate
-		developjs_package_checkIfCanOverwrite
-		developjs_package_createModules
-	}
-	
-	core_variable_array_iterate developjs_packages _developjs_processPackages_callback
+{	
+	core_variable_array_iterate developjs_packages developjs_package_process
 }

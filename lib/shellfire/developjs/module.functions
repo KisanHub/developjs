@@ -15,8 +15,8 @@ developjs_module_process()
 		developjs_module_validate
 		developjs_module_createOutputFilePath
 	fi
-
-	developjs_module_minimiseWithClosure
+	
+	developjs_module_appendToPackageJs
 }
 
 developjs_module_setVariables()
@@ -27,7 +27,6 @@ developjs_module_setVariables()
 	
 	developjs_module_outputFileBaseNamePath="$developjs_outputPath"/"$developjs_module_name"
 	developjs_module_outputFilePath="$developjs_module_outputFileBaseNamePath".js
-	developjs_module_outputMinFilePath="$developjs_module_outputFileBaseNamePath".min.js
 }
 
 core_dependency_requires '*' rm
@@ -60,39 +59,22 @@ developjs_module_createOutputFilePath()
 	{
 		printf '/*\n'
 		
-		printf '%s' '@license '
 		cat "$developjs_copyrightFile"
 		printf '\n'
 		
 		printf '*/\n\n\n'
-	
+		
 		jsonreader_parse "$developjs_module_filePath" developjs_module_parseJson_callback
-	} >>"$developjs_module_outputFilePath"
+	} >"$developjs_module_outputFilePath"
 }
 
-# https://developers.google.com/closure/compiler/docs/api-ref
-core_usesIn curl
-developjs_module_minimiseWithClosure()
+core_dependency_requires '*' cat
+developjs_module_appendToPackageJs()
 {
-	local curl_uploadFile
-	
-	local TMP_FILE
-	core_temporaryFiles_newFileToRemoveOnExit
-	local curl_uploadFile="$TMP_FILE"
-
-	local curl_httpStatusCode
-	urlencode_xWwwFormUrlEncoded \
-		'js_code' "$(<"$developjs_module_outputFilePath")" \
-		'compilation_level' 'SIMPLE_OPTIMIZATIONS' \
-		'output_format' 'text' \
-		'output_info' 'compiled_code' \
-		'language' 'ECMASCRIPT5_STRICT' \
-		>"$curl_uploadFile"
-	
-	curl_http none '' POST 'http://closure-compiler.appspot.com/compile' "$developjs_module_outputMinFilePath"
-	if [ $curl_httpStatusCode -ne 200 ]; then
-		core_exitError $core_commandLine_exitCode_PROTOCOL "Did not minimise javascript using Closure"
-	fi
+	{
+		cat "$developjs_module_outputFilePath"
+		printf '\n'
+	} >>"$developjs_package_outputFilePath"
 }
 
 core_dependency_requires '*' sed
