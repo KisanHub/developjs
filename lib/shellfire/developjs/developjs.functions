@@ -2,23 +2,21 @@
 # Copyright © 2015 The developers of developjs. See the COPYRIGHT file in the top-level directory of this distribution and at https://raw.githubusercontent.com/KisanHub/developjs/master/COPYRIGHT.
 
 
-developjs_populateAllModulesIfNoneSupplied()
+developjs_populateAllPackagesIfNoneSupplied()
 {
-	if ! core_variable_array_isEmpty developjs_modules; then
+	if ! core_variable_array_isEmpty developjs_packages; then
 		return 0
 	fi
 	
 	local module
-	pushd "$developjs_modulePath"
+	pushd "$developjs_packagePath"
 	
 		set +f
-		for module in *
+		for packageJsonFile in *.package.json
 		do
 			set -f
-			if [ -d "$module" ]; then
-				if [ -s "$module"/module.json ]; then
-					core_variable_array_append developjs_modules "$module"
-				fi
+			if [ -s "$packageJsonFile" ]; then
+				core_variable_array_append developjs_packages "$packageJsonFile"
 			fi
 		done
 		set -f
@@ -31,17 +29,16 @@ developjs_createOutputPath()
 	mkdir -m 0755 -p "$developjs_outputPath"
 }
 
-core_usesIn developjs module
-developjs_processModules()
+core_usesIn developjs package
+developjs_processPackages()
 {
-	_developjs_processModules_callback()
+	_developjs_processPackages_callback()
 	{
-		developjs_module_setVariables
-		developjs_module_validate
-		developjs_module_checkIfCanOverwrite
-		developjs_module_createOutputFilePath
-		developjs_module_minimiseWithClosure
-	}	
+		developjs_package_setVariables
+		developjs_package_validate
+		developjs_package_checkIfCanOverwrite
+		developjs_package_createModules
+	}
 	
-	core_variable_array_iterate developjs_modules _developjs_processModules_callback
+	core_variable_array_iterate developjs_packages _developjs_processPackages_callback
 }

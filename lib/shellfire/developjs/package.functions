@@ -1,0 +1,86 @@
+# This file is part of developjs. It is subject to the licence terms in the COPYRIGHT file found in the top-level directory of this distribution and at https://raw.githubusercontent.com/KisanHub/developjs/master/COPYRIGHT. No part of developjs, including this file, may be copied, modified, propagated, or distributed except according to the terms contained in the COPYRIGHT file.
+# Copyright © 2015 The developers of developjs. See the COPYRIGHT file in the top-level directory of this distribution and at https://raw.githubusercontent.com/KisanHub/developjs/master/COPYRIGHT.
+
+
+developjs_package_setVariables()
+{
+	local packageFileName="$core_variable_array_element"
+	local extension=".package.json"
+	local extensionLength=${#extension}
+	
+	developjs_packageName="$(core_variable_allButLastN "$packageFileName" $extensionLength)"
+	developjs_packageFilePath="$developjs_packagePath"/"$packageFileName"
+	developjs_packageOutputFilePath="$developjs_packageName".package.js
+}
+
+developjs_package_validate()
+{
+	core_validate_filePathReadable "$core_commandLine_exitCode_USAGE" "non-option" "packages" "$developjs_packageFilePath"
+}
+
+core_dependency_requires '*' rm
+developjs_package_checkIfCanOverwrite()
+{
+	if [ -e "$developjs_packageOutputFilePath" ]; then
+		if core_variable_isTrue "$developjs_force"; then
+			rm -rf "$developjs_packageOutputFilePath"
+		else
+			core_exitError $core_commandLine_exitCode_CANTCREAT "Can not overwrite existing file '$developjs_packageOutputFilePath'; please specify --force to do so"
+		fi
+	fi
+}
+
+core_usesIn jsonreader
+developjs_package_createModules()
+{
+	local developjs_modules
+	local developjs_modules_initialised
+	
+	core_variable_array_initialise developjs_modules
+	jsonreader_parse "$developjs_packageFilePath" developjs_package_parseJson_callback
+	
+	core_variable_array_iterate developjs_modules developjs_module_process
+}
+
+core_dependency_requires '*' sed
+developjs_package_parseJson_callback()
+{
+    case "$eventKind" in
+
+        root)
+			core_exitError $core_commandLine_exitCode_DATAERR "Did not expect anything but array for root in JSON for package '$developjs_packageName'"
+        ;;
+
+        object)
+			core_exitError $core_commandLine_exitCode_DATAERR "Did not expect anything but array in JSON for package '$developjs_packageName'"
+        ;;
+
+        array)
+
+            case "$eventVariant" in
+
+                start)
+	                if [ "$eventValue" = 'object' ]; then
+						core_exitError $core_commandLine_exitCode_DATAERR "Did not expect anything but array for root in JSON for package '$developjs_packageName'"
+	                fi
+                ;;
+
+                boolean|number)
+					core_exitError $core_commandLine_exitCode_DATAERR "Did not expect boolean or number in JSON object for package '$developjs_packageName'"
+                ;;
+				
+				string)
+					local moduleName="$eventValue"
+					core_variable_array_append developjs_modules "$moduleName"
+				;;
+
+                end)
+					:
+                ;;
+
+            esac
+
+        ;;
+
+    esac
+}

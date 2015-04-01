@@ -9,6 +9,8 @@ _program()
 	
     developjs()
     {
+		developjs_populateAllPackagesIfNoneSupplied
+		
 		developjs_populateAllModulesIfNoneSupplied
 		developjs_createOutputPath
 		developjs_processModules
@@ -27,31 +29,31 @@ _program_entrypoint='developjs'
 
 _program_commandLine_parseInitialise()
 {
-	developjs_modulePath_default="$(pwd)"/source
+	developjs_packagePath_default="$(pwd)"/source
 	developjs_outputPath_default="$(pwd)"/output
 }
 
 _program_commandLine_helpMessage()
 {
-	_program_commandLine_helpMessage_usage="[OPTION]... -- [MODULES]..."
-	_program_commandLine_helpMessage_description="Parses MODULE.json files to create concatenated JavaScript"
+	_program_commandLine_helpMessage_usage="[OPTION]... -- [PACKAGES]..."
+	_program_commandLine_helpMessage_description="Parses *.package.json files to create concatenated JavaScript"
 	_program_commandLine_helpMessage_options="
-  -m, --module-path PATH     PATH to folder of modules.
-                             Defaults to '$developjs_modulePath_default'.
+  -m, --package-path PATH    PATH to package folder.
+                             Defaults to '$developjs_packagePath_default'.
   -o, --output-path PATH     PATH to folder of concatenated JavaScript.
                              Defaults to '$developjs_outputPath_default'.
   -l, --copyright-file PATH  PATH to copyright file.
                              Defaults to '--module-path ../COPYRIGHT', currently:-
-                             '$developjs_modulePath_default/../COPYRIGHT'.
+                             '$developjs_packagePath_default/../COPYRIGHT'.
   -f, --force                Force overwriting of existing modules."
     _program_commandLine_helpMessage_optionsSpacing='   '
 	_program_commandLine_helpMessage_configurationKeys="
-  developjs_modulePath      Equivalent to --module-path
+  developjs_packagePath     Equivalent to --package-path
   developjs_outputPath      Equivalent to --output-path
   developjs_copyrightFile   Equivalent to --copyright-file
 "
 	_program_commandLine_helpMessage_examples="
-  ${_program_name} -- classjs.module.json
+  ${_program_name} -- mongojs.package.json
 "
 }
 
@@ -59,7 +61,7 @@ _program_commandLine_optionExists()
 {
 	case "$optionName" in
 		
-		m|module-path)
+		m|package-path)
 			echo 'yes-argumented'
 		;;
 		
@@ -99,7 +101,7 @@ _program_commandLine_processOptionWithArgument()
 		
 		m|module-path)
 			core_validate_folderPathReadableAndSearchableAndWritable $core_commandLine_exitCode_USAGE 'option' "$optionNameIncludingHyphens" "$optionValue"
-			developjs_modulePath="$optionValue"
+			developjs_packagePath="$optionValue"
 		;;
 		
 		o|output-path)
@@ -117,16 +119,16 @@ _program_commandLine_processOptionWithArgument()
 
 _program_commandLine_handleNonOptions()
 {
-	core_variable_array_initialise developjs_modules
-	core_variable_array_append developjs_modules "$@"
+	core_variable_array_initialise developjs_packages
+	core_variable_array_append developjs_packages "$@"
 }
 
 _program_commandLine_validate()
 {
-	if core_variable_isUnset developjs_modulePath; then
-		developjs_modulePath="$developjs_modulePath_default"
+	if core_variable_isUnset developjs_packagePath; then
+		developjs_packagePath="$developjs_packagePath_default"
 	else
-		core_validate_folderPathReadableAndSearchableAndWritable $core_commandLine_exitCode_CONFIG 'configuration setting' 'developjs_modulePath' "$developjs_modulePath"
+		core_validate_folderPathReadableAndSearchableAndWritable $core_commandLine_exitCode_CONFIG 'configuration setting' 'developjs_packagePath' "$developjs_packagePath"
 	fi
 
 	if core_variable_isUnset developjs_outputPath; then
@@ -136,7 +138,7 @@ _program_commandLine_validate()
 	fi
 
 	if core_variable_isUnset developjs_copyrightFile; then
-		developjs_copyrightFile="$developjs_modulePath"/../COPYRIGHT
+		developjs_copyrightFile="$developjs_packagePath"/../COPYRIGHT
 		core_validate_filePathReadable $core_commandLine_exitCode_CONFIG 'default' '--copyright-file' "$developjs_copyrightFile"
 	else
 		core_validate_filePathReadable $core_commandLine_exitCode_CONFIG 'configuration setting' 'developjs_outputPath' "$developjs_outputPath"
