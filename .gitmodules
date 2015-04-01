@@ -19,3 +19,6 @@
 [submodule "lib/shellfire/version"]
 	path = lib/shellfire/version
 	url = https://github.com/shellfire-dev/version.git
+[submodule "lib/shellfire/compress"]
+	path = lib/shellfire/compress
+	url = https://github.com/shellfire-dev/compress.git

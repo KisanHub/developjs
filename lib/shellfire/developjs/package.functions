@@ -10,6 +10,7 @@ developjs_package_process()
 	developjs_package_createHeader
 	developjs_package_createModules
 	developjs_package_minimiseWithClosure
+	developjs_package_compressMinified
 }
 
 developjs_package_setVariables()
@@ -20,8 +21,8 @@ developjs_package_setVariables()
 	
 	developjs_package_name="$(core_variable_allButLastN "$packageFileName" $extensionLength)"
 	developjs_package_inputFilePath="$developjs_packagePath"/"$packageFileName"
-	developjs_package_outputFilePath="$developjs_outputPath"/"$developjs_package_name".package.js
-	developjs_package_outputMinFilePath="$developjs_outputPath"/"$developjs_package_name".package.min.js
+	developjs_package_outputFilePath="$developjs_outputPath"/"$developjs_package_name".package.preminified.js
+	developjs_package_outputMinFilePath="$developjs_outputPath"/"$developjs_package_name".package.js
 }
 
 developjs_package_validate()
@@ -90,6 +91,12 @@ developjs_package_minimiseWithClosure()
 	if [ $curl_httpStatusCode -ne 200 ]; then
 		core_exitError $core_commandLine_exitCode_PROTOCOL "Did not minimise javascript using Closure"
 	fi
+}
+
+core_usesIn compress gzio
+developjs_package_compressMinified()
+{
+	compress_gzip "$developjs_package_outputMinFilePath"
 }
 
 core_dependency_requires '*' sed
