@@ -10,10 +10,8 @@ _program()
     developjs()
     {
 		developjs_populateAllPackagesIfNoneSupplied
-		
-		developjs_populateAllModulesIfNoneSupplied
 		developjs_createOutputPath
-		developjs_processModules
+		developjs_processPackages
     }
 }
 
