@@ -29,7 +29,7 @@
 	],
 	"main":
 	[
-		"source/DevelopModule/DevelopModule.js"
+		"release/DevelopModule.js"
 	],
 	"ignore":
 	[
