@@ -8,7 +8,7 @@ developjs_populateAllPackagesIfNoneSupplied()
 		return 0
 	fi
 	
-	local module
+	local packageJsonFile
 	pushd "$developjs_packagePath"
 	
 		set +f
