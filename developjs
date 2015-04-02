@@ -41,7 +41,7 @@ _program_commandLine_helpMessage()
   -o, --output-path PATH     PATH to folder of concatenated JavaScript.
                              Defaults to '$developjs_outputPath_default'.
   -l, --copyright-file PATH  PATH to copyright file.
-                             Defaults to '--module-path ../COPYRIGHT', currently:-
+                             Defaults to '--package-path ../COPYRIGHT', currently:-
                              '$developjs_packagePath_default/../COPYRIGHT'.
   -f, --force                Force overwriting of existing modules."
     _program_commandLine_helpMessage_optionsSpacing='   '
