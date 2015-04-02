@@ -36,7 +36,7 @@ _program_commandLine_helpMessage()
 	_program_commandLine_helpMessage_usage="[OPTION]... -- [PACKAGES]..."
 	_program_commandLine_helpMessage_description="Parses *.package.json files to create concatenated JavaScript"
 	_program_commandLine_helpMessage_options="
-  -m, --package-path PATH    PATH to package folder.
+  -p, --package-path PATH    PATH to package folder.
                              Defaults to '$developjs_packagePath_default'.
   -o, --output-path PATH     PATH to folder of concatenated JavaScript.
                              Defaults to '$developjs_outputPath_default'.
@@ -59,7 +59,7 @@ _program_commandLine_optionExists()
 {
 	case "$optionName" in
 		
-		m|package-path)
+		p|package-path)
 			echo 'yes-argumented'
 		;;
 		
@@ -97,7 +97,7 @@ _program_commandLine_processOptionWithArgument()
 {
 	case "$optionName" in
 		
-		m|module-path)
+		p|package-path)
 			core_validate_folderPathReadableAndSearchableAndWritable $core_commandLine_exitCode_USAGE 'option' "$optionNameIncludingHyphens" "$optionValue"
 			developjs_packagePath="$optionValue"
 		;;
